@@ -1,4 +1,8 @@
 #include <SFML/Graphics.hpp>
+#include "Client.h"
+
+
+std::unique_ptr<Client> client;
 
 int main()
 {
@@ -18,6 +22,7 @@ int main()
 		window.clear();
 		window.draw(shape);
 		window.display();
+		client->client();
 	}
 
 	return 0;
