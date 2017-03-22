@@ -27,7 +27,7 @@ void Client::client()
 				{
 					std::string str;
 					packet >> str;
-					std::cout << "< " << str << std::endl;
+					//std::cout << "< " << str << std::endl;
 				}
 				else if (msg == NetMsg::PING)
 				{
@@ -45,10 +45,10 @@ void Client::client()
 
 void Client::input(TcpClient &socket)
 {
-	while (true)
+	while (false)
 	{
 		std::string input;
-		std::getline(std::cin, input);
+		//std::getline(std::cin, input);
 
 		sf::Packet packet;
 		packet << NetMsg::CHAT << input;
@@ -64,7 +64,7 @@ bool Client::connect(TcpClient& socket)
 		return false;
 	}
 
-	std::cout << "Connected to server: " << SERVER_IP << std::endl;
+	//std::cout << "Connected to server: " << SERVER_IP << std::endl;
 	socket.setBlocking(false);
 	return true;
 }

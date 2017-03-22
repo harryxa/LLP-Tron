@@ -21,4 +21,4 @@ public:
 	void client();
 	bool connect(TcpClient&);
 	void input(TcpClient&);
-}
+};

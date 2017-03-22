@@ -6,6 +6,7 @@ std::unique_ptr<Client> client;
 
 int main()
 {
+	client = std::make_unique<Client>();
 	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
 	sf::CircleShape shape(100.f);
 	shape.setFillColor(sf::Color::Green);
