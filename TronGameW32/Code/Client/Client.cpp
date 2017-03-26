@@ -26,7 +26,7 @@ void Client::input(TcpClient &socket)
 
 		//creates a packet and sends it to the server
 		sf::Packet packet;
-		//sednign packet
+		//sending packet
 		packet << NetMsg::CHAT << input;
 		socket.send(packet);
 	}
