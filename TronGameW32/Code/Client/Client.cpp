@@ -21,7 +21,7 @@ void Client::input(TcpClient &socket)
 	while (false)
 	{
 		std::string input;
-		//std::getline(std::cin, input);
+		std::getline(std::cin, input);
 
 
 		//creates a packet and sends it to the server
@@ -62,7 +62,7 @@ void Client::client()
 				{
 					std::string str;
 					//recieving
-					packet >> str;
+					//packet >> str;
 					//std::cout << "< " << str << std::endl;
 				}
 				else if (msg == NetMsg::PING)
@@ -73,7 +73,8 @@ void Client::client()
 					socket.send(pong);
 				}
 			}
-		} while (status != sf::Socket::Disconnected);
+		} 
+		while (status != sf::Socket::Disconnected);
 
 	});
 

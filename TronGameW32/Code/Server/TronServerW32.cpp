@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <SFML\Network.hpp>
+#include <SFML\System.hpp>
 
 #include "MessageTypes.h"
 #include "Client.h"
@@ -19,7 +20,8 @@ using TcpClient = sf::TcpSocket;
 using TcpClientPtr = std::unique_ptr<TcpClient>;
 using TcpClients = std::vector<Client>;
 
-// prototypes
+
+
 bool bindServerPort(sf::TcpListener&);
 void clearStaleCli(TcpClients & tcp_clients);//
 void connect(sf::TcpListener& tcp_listener, sf::SocketSelector& selector, TcpClients& tcp_clients);
@@ -28,6 +30,7 @@ void processChatMsg(sf::Packet &packet, Client & sender, TcpClients & tcp_client
 void ping(TcpClients& tcp_clients);//
 void receiveMsg(TcpClients& tcp_clients, sf::SocketSelector& selector);
 void runServer();
+
 
 bool bindServerPort(sf::TcpListener& listener)
 {
@@ -126,7 +129,7 @@ void listen(sf::TcpListener& tcp_listener, sf::SocketSelector& selector, TcpClie
 			//recieve message and remove stale clients
 			else
 			{
-				receiveMsg(tcp_clients, selector);
+			//	receiveMsg(tcp_clients, selector);
 				clearStaleCli(tcp_clients);
 			}
 		}
@@ -150,8 +153,11 @@ void runServer()
 	selector.add(tcp_listener);
 
 	TcpClients tcp_clients;
-	return listen(tcp_listener, selector, tcp_clients);
+
+	return listen(tcp_listener, selector, tcp_clients);	
 }
+
+
 
 void ping(TcpClients& tcp_clients)
 {
@@ -198,6 +204,8 @@ void processChatMsg(sf::Packet &packet, Client & sender, TcpClients & tcp_client
 		client.getSocket().send(packet);
 	}
 }
+
+
 
 int main()
 {

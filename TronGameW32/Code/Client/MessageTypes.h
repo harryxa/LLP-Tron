@@ -8,3 +8,11 @@ enum NetMsg : sf::Int32
 	PONG = 3,
 	CLIENT_COUNT = 4
 };
+
+enum NetMov : sf::Int32
+{
+	UP = 0,
+	DOWN = 1,
+	LEFT = 2,
+	RIGHT = 3
+};
