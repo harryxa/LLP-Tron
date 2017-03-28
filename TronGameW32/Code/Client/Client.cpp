@@ -32,9 +32,9 @@ void Client::input(TcpClient &socket)
 		if (prevPosition != player.getPosition())
 		{
 			sf::Uint16 x, y;
-		//	x = player.getPosition().x;
+			x = player.getPosition().x;
 			y = player.getPosition().y;
-			x = 7;
+			//x = 7;
 			packet << x << y;
 			
 			socket.send(packet);

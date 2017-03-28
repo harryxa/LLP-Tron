@@ -80,20 +80,39 @@ void recievePlayerPos(TcpClients& tcp_clients, sf::SocketSelector& selector)
 {
 	//sf::Vector2f p2Pos;
 	//sf::CircleShape player2;
-	while (true) 
-	{
 
-		sf::Uint16 x, y;
-		sf::Packet packet;
-		packet >> x >> y;
+	//loops through all clients to find the sender
+		for (auto& sender : tcp_clients)
+		{
+			auto& sender_socket = sender.getSocket();
+			if (selector.isReady(sender_socket))
+			{
+				sf::Packet packet;
+	
+				//if clients disconnected remove sender socket
+				if (sender_socket.receive(packet) == sf::Socket::Disconnected)
+				{
+					selector.remove(sender_socket);
+					sender_socket.disconnect();
+					std::cout << "Client (" << sender.getClientID()
+						<< ") Disconnected" << std::endl;
+					break;
+				}
+	
+				sf::Uint16 x = 0, y = 0;
+				//sending packet
+				packet >> x >> y;
+	
+				std::cout << x << "  " << y << std::endl;
+			}
+		}
+	//socket.receive(packet);
 
-		std::cout << x << "  " << y << std::endl;
-	}
-			
-			
-			
-			
+	//sf::Uint16 x, y;
+	
+	//packet >> x >> y;
 
+	
 }
 
 //this processes data when a client sends it to the server, in this case a message (string)
