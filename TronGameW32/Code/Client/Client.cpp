@@ -26,26 +26,16 @@ void Client::input(TcpClient &socket)
 {	
 	while (true)
 	{		
-		//creates a packet and sends it to the server
+		sf::Vector2f prevPosition = player.getPosition();
+
 		sf::Packet packet;
-		//sending packet
-		//if (net_mov == NetMov::DOWN)
-		//{
-		//	//packet << NetMov::DOWN;
-		//}
-		//if (net_mov == NetMov::UP)
-		//{
-		//	//packet << NetMov::UP;
-		//}
-		//if (net_mov == NetMov::LEFT)
-		//{
-		//	//packet << NetMov::LEFT;
-		//}		
-		//if (net_mov == NetMov::RIGHT)
-		//{
-		//	//packet << NetMov::RIGHT;
-		//}		
-		socket.send(packet);
+		if (prevPosition != player.getPosition())
+		{
+			sf::Int64 i = 2;
+			//packet << player.getPosition().x << player.getPosition().y;
+			packet << i;
+			socket.send(packet);
+		}		
 	}
 }
 

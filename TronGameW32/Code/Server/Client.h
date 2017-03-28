@@ -23,6 +23,8 @@ public:
 	
 	Client& operator=(Client&&);
 	bool operator==(const Client& rhs) { return id == rhs.id; }
+
+
 	
 private:
 	static unsigned int next_id;

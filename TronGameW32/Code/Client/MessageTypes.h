@@ -14,7 +14,8 @@ enum NetMov : sf::Int32
 	UP = 0,
 	DOWN = 1,
 	LEFT = 2,
-	RIGHT = 3	
+	RIGHT = 3,	
+	NONE = 4
 };
 
-extern std::atomic<NetMov> net_mov = NetMov::RIGHT;
+extern std::atomic<NetMov> net_mov = NetMov::NONE;
