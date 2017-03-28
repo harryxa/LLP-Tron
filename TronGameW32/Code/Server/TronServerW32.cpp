@@ -80,26 +80,20 @@ void recievePlayerPos(TcpClients& tcp_clients, sf::SocketSelector& selector)
 {
 	//sf::Vector2f p2Pos;
 	//sf::CircleShape player2;
-
-	for (auto& sender : tcp_clients)
+	while (true) 
 	{
-		auto& sender_socket = sender.getSocket();
-		if (selector.isReady(sender_socket))
-		{
-			int x , y;
-			sf::Packet packet;
 
-			packet >> x >> y;
-			
-			std::cout << x;
-			
-			
-			
-				
-			
-		}
-		
+		sf::Uint16 x, y;
+		sf::Packet packet;
+		packet >> x >> y;
+
+		std::cout << x << "  " << y << std::endl;
 	}
+			
+			
+			
+			
+
 }
 
 //this processes data when a client sends it to the server, in this case a message (string)
