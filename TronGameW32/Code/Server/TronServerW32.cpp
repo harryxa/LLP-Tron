@@ -78,41 +78,31 @@ void connect(sf::TcpListener& tcp_listener, sf::SocketSelector& selector, TcpCli
 
 void recievePlayerPos(TcpClients& tcp_clients, sf::SocketSelector& selector)
 {
-	//sf::Vector2f p2Pos;
-	//sf::CircleShape player2;
-
 	//loops through all clients to find the sender
-		for (auto& sender : tcp_clients)
+	for (auto& sender : tcp_clients)
+	{
+		auto& sender_socket = sender.getSocket();
+		if (selector.isReady(sender_socket))
 		{
-			auto& sender_socket = sender.getSocket();
-			if (selector.isReady(sender_socket))
+			sf::Packet packet;
+
+			//if clients disconnected remove sender socket
+			if (sender_socket.receive(packet) == sf::Socket::Disconnected)
 			{
-				sf::Packet packet;
-	
-				//if clients disconnected remove sender socket
-				if (sender_socket.receive(packet) == sf::Socket::Disconnected)
-				{
-					selector.remove(sender_socket);
-					sender_socket.disconnect();
-					std::cout << "Client (" << sender.getClientID()
-						<< ") Disconnected" << std::endl;
-					break;
-				}
-	
-				sf::Uint16 x = 0, y = 0;
-				//sending packet
-				packet >> x >> y;
-	
-				std::cout << x << "  " << y << std::endl;
+				selector.remove(sender_socket);
+				sender_socket.disconnect();
+				std::cout << "Client (" << sender.getClientID()
+					<< ") Disconnected" << std::endl;
+				break;
 			}
+
+			sf::Uint16 x = 0, y = 0;
+			//recieving packet
+			packet >> x >> y;
+
+			std::cout << x << "  " << y << std::endl;
 		}
-	//socket.receive(packet);
-
-	//sf::Uint16 x, y;
-	
-	//packet >> x >> y;
-
-	
+	}
 }
 
 //this processes data when a client sends it to the server, in this case a message (string)
@@ -194,7 +184,7 @@ void listen(sf::TcpListener& tcp_listener, sf::SocketSelector& selector, TcpClie
 			else
 			{
 				recievePlayerPos(tcp_clients, selector);
-			//	receiveMsg(tcp_clients, selector);
+				//	receiveMsg(tcp_clients, selector);
 				clearStaleCli(tcp_clients);
 			}
 		}
@@ -218,8 +208,8 @@ void runServer()
 	selector.add(tcp_listener);
 
 	TcpClients tcp_clients;
-	
-	return listen(tcp_listener, selector, tcp_clients);	
+
+	return listen(tcp_listener, selector, tcp_clients);
 }
 
 
@@ -255,6 +245,6 @@ void clearStaleCli(TcpClients & tcp_clients)
 int main()
 {
 	runServer();
-	
+
 	return 0;
 }
