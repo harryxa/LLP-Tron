@@ -86,15 +86,16 @@ void recievePlayerPos(TcpClients& tcp_clients, sf::SocketSelector& selector)
 		auto& sender_socket = sender.getSocket();
 		if (selector.isReady(sender_socket))
 		{
-			sf::Int64 i;
+			int x , y;
 			sf::Packet packet;
-		//	if (packet >> p2Pos.x >> p2Pos.y)
-			//{
-			//	player2.setPosition(p2Pos);
-			//}
-			packet >> i;
+
+			packet >> x >> y;
 			
-				std::cout << i;
+			std::cout << x;
+			
+			
+			
+				
 			
 		}
 		
