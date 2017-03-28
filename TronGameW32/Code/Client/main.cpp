@@ -2,6 +2,8 @@
 
 
 std::unique_ptr<Client> client;
+sf::Clock deltatime;
+float dt = 0.0f;
 void draw();
 
 int main()
@@ -21,6 +23,7 @@ int main()
 void draw()
 {	
 	sf::RenderWindow window(sf::VideoMode(800, 600), "LLP-TRON!");
+	dt = deltatime.restart().asSeconds();
 
 	while (window.isOpen())
 	{
@@ -32,6 +35,7 @@ void draw()
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
+		client->update(dt);
 		window.clear();
 		client->draw(window);
 		window.display();

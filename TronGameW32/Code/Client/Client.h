@@ -4,7 +4,6 @@
 #include <string>
 #include "stdafx.h"
 #include <SFML/Network.hpp>
-#include "MessageTypes.h"
 #include <SFML\Graphics.hpp>
 
 
@@ -32,6 +31,6 @@ private:
 	sf::CircleShape player;
 	//std::atomic<NetMov> net_mov = NetMov::NONE;
 
-	float movement = 25.0f;
+	float movement = 0.1f;
 	
 };

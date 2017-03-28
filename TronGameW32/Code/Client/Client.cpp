@@ -1,4 +1,5 @@
 #include "Client.h"
+#include "MessageTypes.h"
 
 Client::Client()
 {
