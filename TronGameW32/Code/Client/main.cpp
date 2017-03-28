@@ -1,4 +1,3 @@
-#include <SFML/Graphics.hpp>
 #include "Client.h"
 
 
@@ -7,13 +6,12 @@ void draw();
 
 int main()
 {
-	client = std::make_unique<Client>();								//creates unique pointer to Client
-		//creates window
+	client = std::make_unique<Client>();//creates unique pointer to Client
+	
+	//creates thread to draw window and cube
 	sf::Thread thread(&draw);
 	thread.launch();
 	
-	//run a program whilst window is open
-
 	client->client();
 	
 
@@ -23,8 +21,7 @@ int main()
 void draw()
 {	
 	sf::RenderWindow window(sf::VideoMode(800, 600), "LLP-TRON!");
-	sf::CircleShape shape(100.f);										//creates sprite circle
-	shape.setFillColor(sf::Color::Green);
+
 	while (window.isOpen())
 	{
 		//check all events that were triggered since the last iteration of the loop
@@ -35,10 +32,8 @@ void draw()
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
-
 		window.clear();
-		window.draw(shape);
+		client->draw(window);
 		window.display();
 	}
-	
 }
