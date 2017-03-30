@@ -86,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Code\Server\Client.h" />
+    <ClInclude Include="..\..\Code\Server\MovementServer.h" />
     <ClInclude Include="..\..\Code\Server\Server.h" />
     <ClInclude Include="..\..\Code\Server\stdafx.h" />
     <ClInclude Include="..\..\Code\Server\targetver.h" />

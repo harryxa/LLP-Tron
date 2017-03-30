@@ -32,7 +32,7 @@ public:
 
 private:
 	sf::CircleShape player;
-	sf::TcpSocket socket;
+	TcpClient socket;
 	NetMov net_mov = NetMov::RIGHT;
 	float movement = 0.1f;
 	

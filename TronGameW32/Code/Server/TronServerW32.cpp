@@ -13,6 +13,7 @@
 
 #include "Game/MessageTypes.h"
 #include "Client.h"
+#include "MovementServer.h"
 
 constexpr int SERVER_TCP_PORT(53000);
 constexpr int SERVER_UDP_PORT(53001);
@@ -25,7 +26,7 @@ bool bindServerPort(sf::TcpListener&);
 void clearStaleCli(TcpClients & tcp_clients);//
 void connect(sf::TcpListener& tcp_listener, sf::SocketSelector& selector, TcpClients& tcp_clients);
 void listen(sf::TcpListener&, sf::SocketSelector&, TcpClients&);
-//void processChatMsg(sf::Packet &packet, Client & sender, TcpClients & tcp_clients);//
+void processChatMsg(sf::Packet &packet, Client & sender, TcpClients & tcp_clients);//
 void ping(TcpClients& tcp_clients);//
 //void receiveMsg(TcpClients& tcp_clients, sf::SocketSelector& selector);
 void runServer();
@@ -94,16 +95,16 @@ void recievePlayerMov(TcpClients& tcp_clients, sf::SocketSelector& selector)
 			}
 		
 			int type = 0;
+			
 			//sending packet
 			packet >> type;
-			
-			std::cout << type;
+			//std::cout << type << std::endl;
 			
 			NetMsg msg = static_cast<NetMsg>(type);
-
+			
 			if (msg == NetMsg::MOVEMENT)
 			{
-				//processChatMsg(packet, sender, tcp_clients);
+				processChatMsg(packet, sender, tcp_clients);
 			}
 			else if (msg == NetMsg::PONG)
 			{
@@ -151,27 +152,27 @@ void recievePlayerMov(TcpClients& tcp_clients, sf::SocketSelector& selector)
 //	}
 //}
 
-//void processChatMsg(sf::Packet &packet, Client & sender, TcpClients & tcp_clients)
-//{
-//	std::string string;
-//	//recieving packet
-//	packet >> string;
-//
-//	std::cout << "Net Msg: (" << sender.getClientID() << ") "
-//		<< string << std::endl;
-//
-//	std::cout << "Latency: " << sender.getLatency().count()
-//		<< "us" << std::endl;
-//
-//	// send the packet to other clients
-//	for (auto& client : tcp_clients)
-//	{
-//		if (sender == client)
-//			continue;
-//
-//		client.getSocket().send(packet);
-//	}
-//}
+void processChatMsg(sf::Packet &packet, Client & sender, TcpClients & tcp_clients)
+{
+	int mov_type;
+	//recieving packet
+	packet >> mov_type;
+
+	std::cout << "Client: (" << sender.getClientID() << ") Move type: "
+		<< mov_type << std::endl;
+
+	std::cout << "Latency: " << sender.getLatency().count()
+		<< "us" << std::endl;
+
+	// send the packet to other clients
+	for (auto& client : tcp_clients)
+	{
+		if (sender == client)
+			continue;
+
+		client.getSocket().send(packet);
+	}
+}
 
 //endless loop to poll the selector for network activity. eg. connection request or clients sending data
 //it is polled overtime as to not block the thread
