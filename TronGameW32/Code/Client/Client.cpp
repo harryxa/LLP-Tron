@@ -1,6 +1,5 @@
 #include "Client.h"
-#include "MessageTypes.h"
-
+#include <Game\MessageTypes.h>
 Client::Client()
 {
 	player.setRadius(10.0f);
@@ -22,23 +21,34 @@ bool Client::connect(TcpClient& socket)
 }
 
 //main client "game-loop" this waits for input
-void Client::input(TcpClient &socket)
+void Client::input(sf::Event* pEvent)
 {	
-	while (true)
-	{		
-		sf::Vector2f prevPosition = player.getPosition();
-
-		sf::Packet packet;
-		if (prevPosition != player.getPosition())
-		{
-			sf::Uint16 x, y;
-			x = player.getPosition().x;
-			y = player.getPosition().y;
-			packet << x << y;
-			
-			socket.send(packet);
-		}		
+	if (pEvent->key.code == sf::Keyboard::W)
+	{
+		net_mov = NetMov::UP;
 	}
+	else if (pEvent->key.code == sf::Keyboard::S)
+	{
+		net_mov = NetMov::DOWN;
+	}
+	else if (pEvent->key.code == sf::Keyboard::A)
+	{
+		net_mov = NetMov::LEFT;
+	}
+	else if (pEvent->key.code == sf::Keyboard::D)
+	{
+		net_mov = NetMov::RIGHT;
+	}
+	sendPacket(net_mov);
+}
+
+void Client::sendPacket(NetMov _mov)
+{
+	
+	sf::Packet packet;
+
+	packet << NetMsg::MOVEMENT << _mov;
+	socket.send(packet);
 }
 
 void Client::draw(sf::RenderWindow & window)
@@ -46,46 +56,7 @@ void Client::draw(sf::RenderWindow & window)
 	window.draw(player);
 }
 
-void Client::update(float deltaTime)
-{
-	sf::Vector2f moveamount = sf::Vector2f(0, 0);
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
-	{
-		net_mov = NetMov::LEFT;
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
-	{
-		net_mov = NetMov::DOWN;
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-	{
-		net_mov = NetMov::RIGHT;
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
-	{
-		net_mov = NetMov::UP;
-	}
-
-	if (net_mov == NetMov::DOWN)
-	{
-		moveamount.y += movement * deltaTime;
-	}
-	if (net_mov == NetMov::UP)
-	{
-		moveamount.y -= movement * deltaTime;
-	}
-	if (net_mov == NetMov::LEFT)
-	{
-		moveamount.x -= movement * deltaTime;
-	}
-	if (net_mov == NetMov::RIGHT)
-	{
-		moveamount.x += movement * deltaTime;
-	}
-
-	player.move(moveamount);
-}
 //this co-ordinates the start up of the client by creating the connection, runs a new thread for recieving messages
 //and ends by calling the input function
 void Client::client()
@@ -114,25 +85,24 @@ void Client::client()
 				NetMsg msg = static_cast<NetMsg>(header);
 				if (msg == NetMsg::CHAT)
 				{
-					std::string str;
+					//std::string str;
 					//recieving
 					//packet >> str;
 					//std::cout << "< " << str << std::endl;
+
 				}
-				else if (msg == NetMsg::PING)
-				{
-					sf::Packet pong;
-					//sending
-					pong << NetMsg::PONG;
-					socket.send(pong);
-				}
+				//else if (msg == NetMsg::PING)
+				//{
+				//	sf::Packet pong;
+				//	//sending
+				//	pong << NetMsg::PONG;
+				//	socket.send(pong);
+				//}
 			}
 		} 
 		while (status != sf::Socket::Disconnected);
 
 	});
-
-	return input(socket);
 }
 
 
