@@ -23,26 +23,33 @@ bool Client::connect(TcpClient& socket)
 //main client "game-loop" this waits for input
 void Client::input(sf::Event* pEvent)
 {	
+	previous_mov = net_mov;
+
 	if (pEvent->key.code == sf::Keyboard::W)
 	{
-		net_mov = NetMov::UP;
-	}
-	else if (pEvent->key.code == sf::Keyboard::S)
-	{
-		net_mov = NetMov::DOWN;
+		net_mov = MovementType::UP;
 	}
 	else if (pEvent->key.code == sf::Keyboard::A)
 	{
-		net_mov = NetMov::LEFT;
+		net_mov = MovementType::LEFT;
+	}
+	else if (pEvent->key.code == sf::Keyboard::S)
+	{
+		net_mov = MovementType::DOWN;
 	}
 	else if (pEvent->key.code == sf::Keyboard::D)
 	{
-		net_mov = NetMov::RIGHT;
+		net_mov = MovementType::RIGHT;
 	}
-	sendPacket(net_mov);
+
+	if (previous_mov != net_mov)
+	{
+		sendPacket(net_mov);
+	}
 }
 
-void Client::sendPacket(NetMov _mov)
+//sends input to server and 
+void Client::sendPacket(MovementType _mov)
 {
 	
 	sf::Packet packet;

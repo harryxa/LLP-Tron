@@ -91,7 +91,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Code\Client\Client.h" />
-    <ClInclude Include="..\..\Code\Client\Movement.h" />
     <ClInclude Include="..\..\Code\Client\stdafx.h" />
     <ClInclude Include="..\..\Code\Client\targetver.h" />
   </ItemGroup>

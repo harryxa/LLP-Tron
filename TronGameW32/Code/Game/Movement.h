@@ -1,6 +1,6 @@
 #pragma once
-
-enum NetMov
+#include <SFML/Network.hpp>
+enum MovementType
 {
 	UP = 0,
 	DOWN = 1,

@@ -3,11 +3,10 @@
 #include <iostream>
 #include <string>
 #include "stdafx.h"
-#include "Movement.h"
-
 #include <SFML/Network.hpp>
 #include <SFML\Graphics.hpp>
 
+#include <Game\Movement.h>
 
 using TcpClient = sf::TcpSocket;
 using TcpClientPtr = std::unique_ptr<TcpClient>;
@@ -26,14 +25,16 @@ public:
 	void client();
 	bool connect(TcpClient&);
 	void input(sf::Event* pEvent);
-	void sendPacket(NetMov _mov);
+	void sendPacket(MovementType _mov);
 	void draw(sf::RenderWindow& window);
 
 
 private:
 	sf::CircleShape player;
 	TcpClient socket;
-	NetMov net_mov = NetMov::RIGHT;
+	MovementType net_mov = MovementType::RIGHT;
+	MovementType previous_mov;
 	float movement = 0.1f;
+
 	
 };
