@@ -21,9 +21,6 @@ using TcpClient = sf::TcpSocket;
 using TcpClientPtr = std::unique_ptr<TcpClient>;
 using TcpClients = std::vector<Client>;
 
-
-
-
 bool bindServerPort(sf::TcpListener&);
 void clearStaleCli(TcpClients & tcp_clients);//
 void connect(sf::TcpListener& tcp_listener, sf::SocketSelector& selector, TcpClients& tcp_clients);
@@ -70,9 +67,9 @@ void connect(sf::TcpListener& tcp_listener, sf::SocketSelector& selector, TcpCli
 		welcome_msg = "Welcome to Huxy's chat room \n";
 		welcome_msg += "There are " + client_count + " connected clients";
 
-		//sf::Packet packet;
-		//packet << NetMsg::CHAT << welcome_msg;
-		//client_ref.send(packet);
+		sf::Packet packet;
+		packet << NetMsg::CHAT << welcome_msg;
+		client_ref.send(packet);
 	}
 }
 
@@ -96,23 +93,22 @@ void recievePlayerMov(TcpClients& tcp_clients, sf::SocketSelector& selector)
 				break;
 			}
 		
-			int header = 0;
+			int type = 0;
 			//sending packet
-			packet >> header;
+			packet >> type;
 			
-			std::cout << header;
+			std::cout << type;
 			
-			NetMsg msg = static_cast<NetMsg>(header);
+			NetMsg msg = static_cast<NetMsg>(type);
 
 			if (msg == NetMsg::MOVEMENT)
 			{
 				//processChatMsg(packet, sender, tcp_clients);
 			}
-			/*else if (msg == NetMsg::PONG)
+			else if (msg == NetMsg::PONG)
 			{
 				sender.pong();
-			}*/
-
+			}
 		}
 	}
 }

@@ -61,7 +61,7 @@ void Client::draw(sf::RenderWindow & window)
 //and ends by calling the input function
 void Client::client()
 {
-	TcpClient socket;
+	/*TcpClient socket;*/
 	if (!connect(socket))
 	{
 		return;
@@ -91,13 +91,13 @@ void Client::client()
 					//std::cout << "< " << str << std::endl;
 
 				}
-				//else if (msg == NetMsg::PING)
-				//{
-				//	sf::Packet pong;
-				//	//sending
-				//	pong << NetMsg::PONG;
-				//	socket.send(pong);
-				//}
+				else if (msg == NetMsg::PING)
+				{
+					sf::Packet pong;
+					//sending
+					pong << NetMsg::PONG;
+					socket.send(pong);
+				}
 			}
 		} 
 		while (status != sf::Socket::Disconnected);
