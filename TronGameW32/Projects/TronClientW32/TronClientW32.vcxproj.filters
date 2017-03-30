@@ -35,5 +35,8 @@
     <ClInclude Include="..\..\Code\Client\targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Code\Client\Movement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

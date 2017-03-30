@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string>
 #include "stdafx.h"
+#include "Movement.h"
+
 #include <SFML/Network.hpp>
 #include <SFML\Graphics.hpp>
 
@@ -23,14 +25,15 @@ public:
 	~Client() = default;
 	void client();
 	bool connect(TcpClient&);
-	void input(TcpClient&);
+	void input(sf::Event* pEvent);
+	void sendPacket(NetMov _mov);
 	void draw(sf::RenderWindow& window);
-	void update(float deltaTime);
+
 
 private:
 	sf::CircleShape player;
-	//std::atomic<NetMov> net_mov = NetMov::NONE;
-
+	sf::TcpSocket socket;
+	NetMov net_mov = NetMov::RIGHT;
 	float movement = 0.1f;
 	
 };
