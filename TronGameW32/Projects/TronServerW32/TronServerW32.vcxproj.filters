@@ -21,9 +21,6 @@
     <ClInclude Include="..\..\Code\Server\Client.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Code\Server\MessageTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Code\Server\Server.h">
       <Filter>Header Files</Filter>
     </ClInclude>

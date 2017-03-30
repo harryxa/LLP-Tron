@@ -11,7 +11,7 @@
 #include <SFML\System.hpp>
 #include <SFML\Graphics.hpp>
 
-#include "MessageTypes.h"
+#include "Game/MessageTypes.h"
 #include "Client.h"
 
 constexpr int SERVER_TCP_PORT(53000);
@@ -21,9 +21,6 @@ using TcpClient = sf::TcpSocket;
 using TcpClientPtr = std::unique_ptr<TcpClient>;
 using TcpClients = std::vector<Client>;
 
-
-
-
 bool bindServerPort(sf::TcpListener&);
 void clearStaleCli(TcpClients & tcp_clients);//
 void connect(sf::TcpListener& tcp_listener, sf::SocketSelector& selector, TcpClients& tcp_clients);
@@ -32,7 +29,7 @@ void listen(sf::TcpListener&, sf::SocketSelector&, TcpClients&);
 void ping(TcpClients& tcp_clients);//
 //void receiveMsg(TcpClients& tcp_clients, sf::SocketSelector& selector);
 void runServer();
-void recievePlayerPos(TcpClients& tcp_clients, sf::SocketSelector& selector);
+void recievePlayerMov(TcpClients& tcp_clients, sf::SocketSelector& selector);
 
 
 bool bindServerPort(sf::TcpListener& listener)
@@ -76,7 +73,7 @@ void connect(sf::TcpListener& tcp_listener, sf::SocketSelector& selector, TcpCli
 	}
 }
 
-void recievePlayerPos(TcpClients& tcp_clients, sf::SocketSelector& selector)
+void recievePlayerMov(TcpClients& tcp_clients, sf::SocketSelector& selector)
 {
 	//loops through all clients to find the sender
 	for (auto& sender : tcp_clients)
@@ -95,12 +92,23 @@ void recievePlayerPos(TcpClients& tcp_clients, sf::SocketSelector& selector)
 					<< ") Disconnected" << std::endl;
 				break;
 			}
+		
+			int type = 0;
+			//sending packet
+			packet >> type;
+			
+			std::cout << type;
+			
+			NetMsg msg = static_cast<NetMsg>(type);
 
-			sf::Uint16 x = 0, y = 0;
-			//recieving packet
-			packet >> x >> y;
-
-			std::cout << x << "  " << y << std::endl;
+			if (msg == NetMsg::MOVEMENT)
+			{
+				//processChatMsg(packet, sender, tcp_clients);
+			}
+			else if (msg == NetMsg::PONG)
+			{
+				sender.pong();
+			}
 		}
 	}
 }
@@ -126,11 +134,11 @@ void recievePlayerPos(TcpClients& tcp_clients, sf::SocketSelector& selector)
 //				break;
 //			}
 //
-//			int header = 0;
-//			//sending packet
+		//	int header = 0;
+			//sending packet
 //			packet >> header;
-//
-//			NetMsg msg = static_cast<NetMsg>(header);
+
+	//	NetMsg msg = static_cast<NetMsg>(header);
 //			if (msg == NetMsg::CHAT)
 //			{
 //				processChatMsg(packet, sender, tcp_clients);
@@ -183,7 +191,7 @@ void listen(sf::TcpListener& tcp_listener, sf::SocketSelector& selector, TcpClie
 			//recieve message and remove stale clients
 			else
 			{
-				recievePlayerPos(tcp_clients, selector);
+				recievePlayerMov(tcp_clients, selector);
 				//	receiveMsg(tcp_clients, selector);
 				clearStaleCli(tcp_clients);
 			}
@@ -245,6 +253,5 @@ void clearStaleCli(TcpClients & tcp_clients)
 int main()
 {
 	runServer();
-
 	return 0;
 }
