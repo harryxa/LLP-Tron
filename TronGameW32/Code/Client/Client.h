@@ -5,7 +5,6 @@
 #include "stdafx.h"
 #include <SFML/Network.hpp>
 #include <SFML\Graphics.hpp>
-
 #include <Game\Movement.h>
 
 using TcpClient = sf::TcpSocket;

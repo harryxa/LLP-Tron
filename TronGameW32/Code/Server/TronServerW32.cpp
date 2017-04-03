@@ -30,7 +30,7 @@ void processMov(sf::Packet &packet, Client & sender, TcpClients & tcp_clients);/
 void ping(TcpClients& tcp_clients);//
 void runServer();
 void recievePlayerMov(TcpClients& tcp_clients, sf::SocketSelector& selector);
-void sendPacket(Client & sender, sf::Packet &packet, TcpClients & tcp_clients);
+void sendPacket(Client & sender, TcpClients & tcp_clients);
 
 bool bindServerPort(sf::TcpListener& listener)
 {
@@ -102,7 +102,7 @@ void recievePlayerMov(TcpClients& tcp_clients, sf::SocketSelector& selector)
 			if (msg == NetMsg::MOVEMENT)
 			{
 				processMov(packet, sender, tcp_clients);
-				sendPacket(sender, packet, tcp_clients);
+				sendPacket(sender, tcp_clients);
 			}
 			else if (msg == NetMsg::PONG)
 			{
@@ -126,28 +126,32 @@ void processMov(sf::Packet &packet, Client & sender, TcpClients & tcp_clients)
 	std::cout << "Latency: " << sender.getLatency().count()
 		<< "us" << std::endl;
 
+	std::cout << "Client ID: " << sender.getClientID()
+		<< std::endl;
+
 
 	//impliment movement called from game???
 
 	// send the packet to other clients
-	for (auto& client : tcp_clients)
-	{
-		if (sender == client)
-			continue;
+	//for (auto& client : tcp_clients)
+	//{
+	//	if (sender == client)
+	//		continue;
 
-		client.getSocket().send(packet);
-	}
+	//	client.getSocket().send(packet);
+	//}
 }
 
-void sendPacket(Client & sender, sf::Packet &packet, TcpClients & tcp_clients)
+void sendPacket(Client & sender,TcpClients & tcp_clients)
 {
+	sf::Packet packet;
 
 	for (auto& client : tcp_clients)
 	{
-		if (sender == client)
-			continue;
-		
-		packet << NetMsg::MOVEMENT << 30.0f;
+		//if (sender == client)
+		//	continue;
+		int x = 30;
+		packet << NetMsg::MOVEMENT << x;
 		client.getSocket().send(packet);
 	}
 }
