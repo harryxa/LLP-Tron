@@ -88,6 +88,7 @@ void Client::client()
 				int header = 0;
 				packet >> header;
 
+				//recieves movement packages
 				NetMsg msg = static_cast<NetMsg>(header);
 				if (msg == NetMsg::MOVEMENT)
 				{

@@ -83,7 +83,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Code\Game\Player.cpp" />
-    <ClCompile Include="..\..\Code\Game\Players.cpp" />
     <ClCompile Include="..\..\Code\Game\TronGame.cpp" />
   </ItemGroup>
   <ItemGroup>

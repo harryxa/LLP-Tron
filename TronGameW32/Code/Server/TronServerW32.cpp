@@ -142,6 +142,7 @@ void processMov(sf::Packet &packet, Client & sender, TcpClients & tcp_clients)
 	//}
 }
 
+//sends movement packages to clients
 void sendPacket(Client & sender,TcpClients & tcp_clients)
 {
 	sf::Packet packet;

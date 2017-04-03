@@ -21,9 +21,6 @@
     <ClCompile Include="..\..\Code\Game\TronGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Code\Game\Players.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Code\Game\Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
