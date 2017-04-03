@@ -33,4 +33,5 @@ private:
 	std::chrono::steady_clock::time_point timestamp = std::chrono::steady_clock::now();
 	std::chrono::microseconds latency = 100us;
 	int id = next_id++;
+	
 };

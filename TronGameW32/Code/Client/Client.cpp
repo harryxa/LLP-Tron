@@ -50,8 +50,7 @@ void Client::input(sf::Event* pEvent)
 
 //sends input to server and 
 void Client::sendPacket(MovementType _mov)
-{
-	
+{	
 	sf::Packet packet;
 
 	packet << NetMsg::MOVEMENT << _mov;
@@ -90,13 +89,11 @@ void Client::client()
 				packet >> header;
 
 				NetMsg msg = static_cast<NetMsg>(header);
-				if (msg == NetMsg::CHAT)
+				if (msg == NetMsg::MOVEMENT)
 				{
-					//std::string str;
-					//recieving
-					//packet >> str;
-					//std::cout << "< " << str << std::endl;
-
+					int x = 0;
+					packet >> x;
+					player.setRadius(x);
 				}
 				else if (msg == NetMsg::PING)
 				{
