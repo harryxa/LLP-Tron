@@ -4,8 +4,10 @@
 #include <string>
 #include "stdafx.h"
 #include <SFML/Network.hpp>
-#include <SFML\Graphics.hpp>
-#include <Game\Movement.h>
+#include <Game/Game.h>
+#include <SFML/Graphics.hpp>
+#include <Game/Movement.h>
+#include <Game/Game.h>
 
 using TcpClient = sf::TcpSocket;
 using TcpClientPtr = std::unique_ptr<TcpClient>;
@@ -21,19 +23,21 @@ class Client
 public:
 	Client();
 	~Client() = default;
-	void client();
 	bool connect(TcpClient&);
-	void input(sf::Event* pEvent);
-	void sendPacket(MovementType _mov);
-	void draw(sf::RenderWindow& window);
+	void move();
+	void input(sf::Event* _event);
+	void sendPacket(MovementType net_mov);
+	void runClient();
+	void draw();
+	void client(std::unique_ptr<Game>& game);
 
 
 private:
-	sf::CircleShape player;
-	TcpClient socket;
-	MovementType net_mov = MovementType::RIGHT;
+	std::atomic<MovementType> net_mov = MovementType::NONE;
 	MovementType previous_mov;
-	float movement = 0.1f;
+	std::thread movethread;
+	TcpClient socket;
+	std::unique_ptr<Game> game = std::make_unique<Game>();
 
 	
 };

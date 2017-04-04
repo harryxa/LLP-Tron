@@ -2,8 +2,8 @@
 #include <Game\MessageTypes.h>
 Client::Client()
 {
-	player.setRadius(10.0f);
-	player.setFillColor(sf::Color::Green);
+	std::thread movethread(&Client::move, this);
+	movethread.detach();
 }
 
 bool Client::connect(TcpClient& socket)
@@ -18,6 +18,14 @@ bool Client::connect(TcpClient& socket)
 	//std::cout << "Connected to server: " << SERVER_IP << std::endl;
 	socket.setBlocking(false);
 	return true;
+}
+
+void Client::move()
+{
+	while (true)
+	{
+
+	}
 }
 
 //main client "game-loop" this waits for input
@@ -48,34 +56,40 @@ void Client::input(sf::Event* pEvent)
 	}
 }
 
-//sends input to server and 
 void Client::sendPacket(MovementType _mov)
 {	
-	sf::Packet packet;
 
+
+
+	sf::Packet packet;
 	packet << NetMsg::MOVEMENT << _mov;
 	socket.send(packet);
+
+
+
 }
 
-void Client::draw(sf::RenderWindow & window)
-{
-	window.draw(player);
-}
+
+
 
 
 //this co-ordinates the start up of the client by creating the connection, runs a new thread for recieving messages
 //and ends by calling the input function
-void Client::client()
+void Client::client(std::unique_ptr<Game>& game)
 {
-	/*TcpClient socket;*/
 	if (!connect(socket))
 	{
 		return;
 	}
 
+
+	sf::Packet packet;
+
+	packet << NetMsg::CLIENT_COUNT;
+
+	socket.send(packet);
 	auto handle = std::async(std::launch::async, [&]
 	{
-		// keep track of the socket status
 		sf::Socket::Status status;
 
 		do
@@ -84,30 +98,88 @@ void Client::client()
 			status = socket.receive(packet);
 			if (status == sf::Socket::Done)
 			{
-				
 				int header = 0;
 				packet >> header;
-
-				//recieves movement packages
 				NetMsg msg = static_cast<NetMsg>(header);
+				if (msg == NetMsg::CLIENT_COUNT)
+				{
+					int player_count = 0;
+					packet >> player_count;
+					game->createNewPlayer(player_count);
+
+				}
+
 				if (msg == NetMsg::MOVEMENT)
 				{
-					int x = 0;
-					packet >> x;
-					player.setRadius(x);
+					int move_state;
+					packet >> move_state;
+					if (move_state == 0 || move_state == MovementType::UP)
+					{
+						game->getPlayer()->moveUp();
+					}
+					if (move_state == MovementType::LEFT)
+					{
+						game->getPlayer()->moveDown();
+					}
+					if (move_state == MovementType::DOWN)
+					{
+						game->getPlayer()->moveLeft();
+					}
+					if (move_state == MovementType::RIGHT)
+					{
+						game->getPlayer()->moveRight();
+					}
 				}
-				else if (msg == NetMsg::PING)
+				else if (msg == NEW_CLIENT)
 				{
-					sf::Packet pong;
-					//sending
-					pong << NetMsg::PONG;
-					socket.send(pong);
+
+
+				}
+				else if (msg == NetMsg::PONG)
+				{
 				}
 			}
-		} 
-		while (status != sf::Socket::Disconnected);
+
+		} while (status != sf::Socket::Disconnected);
 
 	});
+}
+
+void Client::runClient()
+{
+	std::thread thread(&Client::draw, this);
+	client(game);
+	draw();
+	thread.join();
+}
+
+void Client::draw()
+{
+	sf::RenderWindow window(sf::VideoMode(800, 600), "LLP-TRON!");
+
+	while (window.isOpen())
+	{
+		sf::Event event;
+
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+			{
+				window.close();
+			}
+			if (event.type == sf::Event::KeyPressed)
+			{
+				input(&event);
+			}
+		}
+
+		window.clear();
+		for (auto& player : game->getPlayers())
+		{
+			player->draw(window);
+		}
+		window.display();
+	}
 }
 
 

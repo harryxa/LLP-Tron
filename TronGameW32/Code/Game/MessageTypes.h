@@ -7,6 +7,7 @@ enum NetMsg : sf::Int32
 	PING = 2,
 	PONG = 3,
 	CLIENT_COUNT = 4,
-	MOVEMENT = 5
+	MOVEMENT = 5,
+	NEW_CLIENT = 6,
 };
 
