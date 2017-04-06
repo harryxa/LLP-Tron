@@ -79,7 +79,7 @@ void Client::client(std::unique_ptr<Game>& game)
 						game->getPlayers()[0]->moveRight();
 					}
 
-
+					//player 2 movements
 					if (move_state == 4)
 					{
 						if (game->getPlayers().size() == 2)
@@ -117,7 +117,6 @@ void Client::client(std::unique_ptr<Game>& game)
 				}
 			}
 		} while (status != sf::Socket::Disconnected);
-
 	});
 }
 
@@ -142,13 +141,13 @@ bool Client::connect(TcpClient& _socket)
 //create the grid used for the trails and collisions
 void Client::createGrid()
 {
-	tiles.reserve(900);
+	tiles.reserve(1000);
 
 	int x = 0;
 	int y = 0;
 
 	//for (int i = 0; i < 2025; i++)
-	for (int i = 0; i < 8100; i++)
+	for (int i = 0; i < 6000; i++)
 	{
 		tiles.push_back(sf::RectangleShape());
 

@@ -10,24 +10,30 @@ class Player : public sf::Sprite
 public:
 	Player();
 	~Player();
+	
 	void init(std::string file);
 
 	sf::Sprite getSprite();
+	sf::RectangleShape* getCollider();
+
+	void Move();
 	void moveLeft();
 	void moveRight();
 	void moveUp();
 	void moveDown();
-	void Move();
+	
 	void setPosition(sf::Vector2f pos);
-	void DestroyThread();
-	void setPlayerNum(int Player);
+	void setPlayer(int Player);
 	int getPlayerNum();
-	sf::RectangleShape* getCollider();
+	
+
+	void DestroyThread();
 
 private:
 	int playerNum = 0;
 	bool ThreadAlive = true;
 	std::atomic<int> moveInt;
+
 	sf::Vector2f position = sf::Vector2f(0, 0);
 	sf::Texture texture;
 	sf::Sprite sprite;

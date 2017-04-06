@@ -8,7 +8,6 @@ Player::Player()
 
 Player::~Player()
 {
-
 }
 
 //initialises player with texture
@@ -26,11 +25,11 @@ void Player::setPosition(sf::Vector2f _position)
 {
 	sprite.setPosition(_position);
 }
+
 void Player::DestroyThread()
 {
 	ThreadAlive = false;
 }
-
 
 sf::Sprite Player::getSprite()
 {
@@ -84,8 +83,7 @@ void Player::Move()
 	}
 }
 
-
-void Player::setPlayerNum(int Player)
+void Player::setPlayer(int Player)
 {
 	playerNum = Player;
 }

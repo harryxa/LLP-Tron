@@ -28,7 +28,7 @@ void Game::initNewPlayer(int number_of_players)
 		players.clear();
 		createNewPlayer("..\\..\\Resources\\jake.png");
 		getPlayers()[0]->setPosition(sf::Vector2f(15.0f, 15.0f));
-		getPlayers()[0]->setPlayerNum(1);
+		getPlayers()[0]->setPlayer(1);
 		getPlayers()[0]->getCollider()->setFillColor(sf::Color::Magenta);
 	}
 	//sets up two player game
@@ -39,13 +39,17 @@ void Game::initNewPlayer(int number_of_players)
 			(*i)->DestroyThread();
 		}
 		players.clear();
+
+		//restart player one effectively
 		createNewPlayer("..\\..\\Resources\\jake.png");
 		getPlayers()[0]->setPosition(sf::Vector2f(15.0f, 15.0f));
-		getPlayers()[0]->setPlayerNum(1);
+		getPlayers()[0]->setPlayer(1);
 		getPlayers()[0]->getCollider()->setFillColor(sf::Color::Magenta);
+
+		//player 2
 		createNewPlayer("..\\..\\Resources\\finn.png");
 		getPlayers()[1]->setPosition(sf::Vector2f(710.0f, 510.0f));
-		getPlayers()[1]->setPlayerNum(2);
+		getPlayers()[1]->setPlayer(2);
 		getPlayers()[1]->getCollider()->setFillColor(sf::Color::Blue);
 	}
 }
@@ -72,6 +76,8 @@ void Game::input(sf::Event* _event)
 	{
 		moveType = MovementType::RIGHT;
 	}
+
+	//player 2 movements
 	if (_event->key.code == sf::Keyboard::T && prevType != MovementType::PLAYER2DOWN)
 	{
 		moveType = MovementType::PLAYER2UP;
