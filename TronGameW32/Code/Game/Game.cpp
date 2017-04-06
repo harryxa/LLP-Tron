@@ -9,16 +9,6 @@ Game::~Game()
 {
 }
 
-//std::vector<Player*> Game::getPlayers()
-//{
-//	return players;
-//}
-//
-//Player* Game::getPlayer()
-//{
-//	return player;
-//}
-
 void Game::createNewPlayer(std::string file)
 {
 	player = new Player();
@@ -26,31 +16,33 @@ void Game::createNewPlayer(std::string file)
 	players.push_back(player);
 }
 
-void Game::initNewPlayer(int numberofplayers)
+void Game::initNewPlayer(int number_of_players)
 {
-	if (numberofplayers == 1)
+	//sets up 1 player game
+	if (number_of_players == 1)
 	{
 		for (std::vector<Player*>::iterator i = players.begin(); i != players.end(); i++)
 		{
-			(*i)->KillThread();
+			(*i)->DestroyThread();
 		}
 		players.clear();
 		createNewPlayer("..\\..\\Resources\\jake.png");
-		getPlayers()[0]->setPosition(sf::Vector2f(10.0f, 10.0f));
+		getPlayers()[0]->setPosition(sf::Vector2f(15.0f, 15.0f));
 		getPlayers()[0]->setPlayerNum(1);
-		getPlayers()[0]->getCollider()->setFillColor(sf::Color::Yellow);
+		getPlayers()[0]->getCollider()->setFillColor(sf::Color::Magenta);
 	}
-	if (numberofplayers == 2)
+	//sets up two player game
+	if (number_of_players == 2)
 	{
 		for (std::vector<Player*>::iterator i = players.begin(); i != players.end(); i++)
 		{
-			(*i)->KillThread();
+			(*i)->DestroyThread();
 		}
 		players.clear();
 		createNewPlayer("..\\..\\Resources\\jake.png");
-		getPlayers()[0]->setPosition(sf::Vector2f(10.0f, 10.0f));
+		getPlayers()[0]->setPosition(sf::Vector2f(15.0f, 15.0f));
 		getPlayers()[0]->setPlayerNum(1);
-		getPlayers()[0]->getCollider()->setFillColor(sf::Color::Yellow);
+		getPlayers()[0]->getCollider()->setFillColor(sf::Color::Magenta);
 		createNewPlayer("..\\..\\Resources\\finn.png");
 		getPlayers()[1]->setPosition(sf::Vector2f(710.0f, 510.0f));
 		getPlayers()[1]->setPlayerNum(2);
@@ -60,43 +52,39 @@ void Game::initNewPlayer(int numberofplayers)
 
 void Game::input(sf::Event* _event)
 {
-	/*Stores the previous movement state so that
-	the player isn't sending unecessary packets
-	of the same type to the server. */
+	//cant repeatedly send same info
 	prevType = moveType;
 
-	//Sets the movement state based on WASD input
-	//if (player->getPlayerNum() == 1)
-	//{
-	if (_event->key.code == sf::Keyboard::W)
+	//check so players cannot move back on themselves and checks movement
+	if (_event->key.code == sf::Keyboard::W && prevType != MovementType::DOWN)
 	{
 		moveType = MovementType::UP;
 	}
-	if (_event->key.code == sf::Keyboard::S)
+	if (_event->key.code == sf::Keyboard::S && prevType != MovementType::UP)
 	{
 		moveType = MovementType::DOWN;
 	}
-	if (_event->key.code == sf::Keyboard::A)
+	if (_event->key.code == sf::Keyboard::A && prevType != MovementType::RIGHT)
 	{
 		moveType = MovementType::LEFT;
 	}
-	if (_event->key.code == sf::Keyboard::D)
+	if (_event->key.code == sf::Keyboard::D && prevType != MovementType::LEFT)
 	{
 		moveType = MovementType::RIGHT;
 	}
-	if (_event->key.code == sf::Keyboard::T)
+	if (_event->key.code == sf::Keyboard::T && prevType != MovementType::PLAYER2DOWN)
 	{
 		moveType = MovementType::PLAYER2UP;
 	}
-	if (_event->key.code == sf::Keyboard::G)
+	if (_event->key.code == sf::Keyboard::G && prevType != MovementType::PLAYER2UP)
 	{
 		moveType = MovementType::PLAYER2DOWN;
 	}
-	if (_event->key.code == sf::Keyboard::F)
+	if (_event->key.code == sf::Keyboard::F && prevType != MovementType::PLAYER2RIGHT)
 	{
 		moveType = MovementType::PLAYER2LEFT;
 	}
-	if (_event->key.code == sf::Keyboard::H)
+	if (_event->key.code == sf::Keyboard::H && prevType != MovementType::PLAYER2LEFT)
 	{
 		moveType = MovementType::PLAYER2RIGHT;
 	}

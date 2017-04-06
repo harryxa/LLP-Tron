@@ -35,9 +35,6 @@
     <ClInclude Include="..\..\Code\Game\MessageTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Movement.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Code\Game\Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>

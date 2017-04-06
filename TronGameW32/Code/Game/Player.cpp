@@ -2,7 +2,7 @@
 
 Player::Player()
 {
-	std::thread thread(&Player::masterMove, this);
+	std::thread thread(&Player::Move, this);
 	thread.detach();
 }
 
@@ -11,6 +11,7 @@ Player::~Player()
 
 }
 
+//initialises player with texture
 void Player::init(std::string file)
 {
 	texture.loadFromFile(file);
@@ -20,19 +21,16 @@ void Player::init(std::string file)
 	collider.setPosition(sprite.getPosition().x + 45.0f, sprite.getPosition().y + 60.0f);
 }
 
+//set position
 void Player::setPosition(sf::Vector2f _position)
 {
 	sprite.setPosition(_position);
 }
-void Player::KillThread()
+void Player::DestroyThread()
 {
 	ThreadAlive = false;
 }
 
-//void Player::Draw(sf::RenderWindow & _window)
-//{
-//	_window.draw(player_sprite);
-//}
 
 sf::Sprite Player::getSprite()
 {
@@ -59,25 +57,29 @@ void Player::moveDown()
 	moveInt = 1;
 }
 
-void Player::masterMove()
+void Player::Move()
 {
 	while (ThreadAlive == true)
 	{
 		if (moveInt == 0)
 		{
-			sprite.move(0.00f, -0.0001f);
+			//move up
+			sprite.move(0.00f, -0.00012f);
 		}
 		if (moveInt == 1)
 		{
-			sprite.move(0.0f, 0.0001f);
+			//move down
+			sprite.move(0.0f, 0.00012f);
 		}
 		if (moveInt == 2)
 		{
-			sprite.move(-0.0001f, 0.0f);
+			//move left
+			sprite.move(-0.00012f, 0.0f);
 		}
 		if (moveInt == 3)
 		{
-			sprite.move(0.0001f, 0.0f);
+			//move right
+			sprite.move(0.00012f, 0.0f);
 		}
 	}
 }

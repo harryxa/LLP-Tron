@@ -11,17 +11,15 @@ public:
 	Player();
 	~Player();
 	void init(std::string file);
-	/*void setPosition(sf::Vector2f _position);
-	void movePosition(sf::Vector2f _position);*/
-	//void Draw(sf::RenderWindow& _window);
+
 	sf::Sprite getSprite();
 	void moveLeft();
 	void moveRight();
 	void moveUp();
 	void moveDown();
-	void masterMove();
+	void Move();
 	void setPosition(sf::Vector2f pos);
-	void KillThread();
+	void DestroyThread();
 	void setPlayerNum(int Player);
 	int getPlayerNum();
 	sf::RectangleShape* getCollider();

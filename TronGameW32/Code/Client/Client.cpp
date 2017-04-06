@@ -24,17 +24,19 @@ void Client::sendPacket(MovementType _state)
 
 void Client::client(std::unique_ptr<Game>& game)
 {
-	//Checks if the player can connect
+	//Checks for connect
 	if (!connect(socket))
 	{
 		return;
 	}
+
+	//pack message in packet and send
 	sf::Packet packet;
 	packet << NetMsg::CLIENT_COUNT;
 	socket.send(packet);
-	//managerHeader = _manager;
+
 	auto handle = std::async(std::launch::async, [&]
-	{		
+	{
 		sf::Socket::Status status;
 
 		do
@@ -55,8 +57,7 @@ void Client::client(std::unique_ptr<Game>& game)
 					game->initNewPlayer(numOfPlayers);
 				}
 
-
-
+				//player movements
 				if (msg == NetMsg::MOVEMENT)
 				{
 					int move_state;
@@ -138,6 +139,7 @@ bool Client::connect(TcpClient& _socket)
 	return true;
 }
 
+//create the grid used for the trails and collisions
 void Client::createGrid()
 {
 	tiles.reserve(900);
@@ -167,46 +169,41 @@ void Client::input(sf::Event* _event)
 	{
 		sendPacket(m_game->getMoveType());
 	}
-		
+
 }
 
 void Client::draw()
 {
-	sf::RenderWindow window(sf::VideoMode(800, 600), "LLP-TRON!");
+	sf::RenderWindow window(sf::VideoMode(800, 600), "ADVENTURE-TRON!");
 
 	while (window.isOpen())
 	{
-		
 		sf::Event event;
 
 		while (window.pollEvent(event))
 		{
-			
+
 			if (event.type == sf::Event::Closed)
 			{
 				window.close();
 			}
-			
+
 			if (event.type == sf::Event::KeyPressed)
 			{
-				
+
 				this->input(&event);
 			}
 		}
 		//Clear the game window
 		window.clear();
-
-	/*	for (int i = 0; i < m_game->getPlayers().size; i++)
-		{
-			for (int i = 0; i < tiles.size(); i++)
-			{*/
+		
 		for (auto& player : m_game->getPlayers())
 		{
 			for (auto& tile : tiles)
 			{
-
 				if (player->getCollider()->getGlobalBounds().intersects(tile.getGlobalBounds()))
 				{
+					//tiles start transparant
 					if (tile.getFillColor() == sf::Color::Transparent)
 					{
 						tile.setFillColor(player->getCollider()->getFillColor());
@@ -214,15 +211,14 @@ void Client::draw()
 					else if (tile.getFillColor() != sf::Color::Transparent)
 					{
 						//window.close();
+						//collision()
 					}
 				}
 				window.draw(tile);
 			}
-			player->getCollider()->setPosition(player->getSprite().getPosition().x + 45.0f, player->getSprite().getPosition().y + 60.0f);
+			player->getCollider()->setPosition(player->getSprite().getPosition().x + 55.0f, player->getSprite().getPosition().y + 50.0f);
 			window.draw(player->getSprite());
 		}
-		//player_manager->getPlayer()->Draw(window);
-		//client->draw(window);
 		window.display();
 	}
 }
