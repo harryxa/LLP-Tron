@@ -23,6 +23,7 @@ using TcpClient = sf::TcpSocket;
 using TcpClientPtr = std::unique_ptr<TcpClient>;
 using TcpClients = std::vector<Client>;
 
+NetMsg msg;
 // prototypes
 bool bindServerPort(sf::TcpListener&);
 void clearStaleCli(TcpClients & tcp_clients);
@@ -32,6 +33,8 @@ void processPlayerMovement(sf::Packet &packet, Client & sender, TcpClients & tcp
 void ping(TcpClients& tcp_clients);
 void receiveMsg(TcpClients& tcp_clients, sf::SocketSelector& selector);
 void runServer();
+
+// ChatServer.cpp : Defines the entry point for the console application.
 
 void ping(TcpClients& tcp_clients)
 {
@@ -98,18 +101,10 @@ void connect(sf::TcpListener& tcp_listener, sf::SocketSelector& selector, TcpCli
 		auto client = Client(client_ptr);
 		tcp_clients.push_back(std::move(client));
 		std::cout << "Client (" << client.getClientID() << ") connected." << std::endl;
-		std::string welcome_msg;
-		std::string client_count = std::to_string(tcp_clients.size());
-		welcome_msg = "Welcome to Huxy's chat room \n";
-		welcome_msg += "There are " + client_count + " connected clients";
 
 		sf::Packet packet;
-		packet << NetMsg::CLIENT_COUNT << tcp_clients.size();
+		packet << NetMsg::NEW_CLIENT << tcp_clients.size();
 		client_ref.send(packet);
-
-		sf::Packet packet2;
-		packet2 << NetMsg::NEW_CLIENT;
-		client_ref.send(packet2);
 	}
 }
 
@@ -133,7 +128,7 @@ void receiveMsg(TcpClients& tcp_clients, sf::SocketSelector& selector)
 			int header = 0;
 			packet >> header;
 
-			NetMsg msg = static_cast<NetMsg>(header);
+			msg = static_cast<NetMsg>(header);
 			if (msg == NetMsg::MOVEMENT)
 			{
 				processPlayerMovement(packet, sender, tcp_clients);
@@ -164,7 +159,7 @@ void clearStaleCli(TcpClients & tcp_clients)
 
 void processPlayerMovement(sf::Packet& packet, Client& sender, TcpClients& tcp_clients)
 {
-	int movement_state;
+	int movement_state = 0;
 	packet >> movement_state;
 
 	std::cout << "Client (" << sender.getClientID() << ") movement state: "
@@ -176,12 +171,7 @@ void processPlayerMovement(sf::Packet& packet, Client& sender, TcpClients& tcp_c
 	// send the packet to other clients
 	for (auto& client : tcp_clients)
 	{
-		//sf::Packet packet;
-		//packet << PacketType::MOVEMENT << movement_state;
-		//client.getSocket().send(packet);
-		int header = 0;
-		NetMsg msg = static_cast<NetMsg>(header);
-		if (header != NetMsg::CLIENT_COUNT &&sender == client)
+		if (msg != NetMsg::MOVEMENT &&sender == client)
 		{
 			continue;
 		}

@@ -22,22 +22,23 @@ class Client
 {
 public:
 	Client();
-	~Client() = default;
-	bool connect(TcpClient&);
-	void move();
-	void input(sf::Event* _event);
-	void sendPacket(MovementType net_mov);
+	~Client();
 	void runClient();
+	void input(sf::Event* _event); //Checks which key is pressed
 	void draw();
-	void client(std::unique_ptr<Game>& game);
-
+	void createGrid();
+	void client(std::unique_ptr<Game>& game); //Connects to the server
+	bool connect(TcpClient&); //Validates connection
+	void sendPacket(MovementType _state); //Sends a packet based on key press
 
 private:
-	std::atomic<MovementType> net_mov = MovementType::NONE;
-	MovementType previous_mov;
-	std::thread movethread;
-	TcpClient socket;
-	std::unique_ptr<Game> game = std::make_unique<Game>();
+	std::atomic<MovementType> move_state = MovementType::IDLE; //Holds the current move state
+	MovementType previous_state; //Holds the preivous move state
+	std::unique_ptr<Game> m_game = std::make_unique<Game>();
+	std::vector<sf::RectangleShape> tiles;
+	int amountOfClients;
+	std::thread movement;
+	TcpClient socket; // Socket for the client
 
 	
 };
