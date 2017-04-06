@@ -159,7 +159,6 @@ void Client::createGrid()
 
 void Client::input(sf::Event* _event)
 {
-
 	previous_state = move_state;
 	m_game->input(_event);
 	move_state = m_game->getMoveType();
@@ -181,15 +180,12 @@ void Client::draw()
 
 		while (window.pollEvent(event))
 		{
-
 			if (event.type == sf::Event::Closed)
 			{
 				window.close();
 			}
-
 			if (event.type == sf::Event::KeyPressed)
 			{
-
 				this->input(&event);
 			}
 		}

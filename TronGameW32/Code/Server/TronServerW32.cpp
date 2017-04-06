@@ -141,7 +141,6 @@ void receiveMsg(TcpClients& tcp_clients, sf::SocketSelector& selector)
 			{
 				sf::Packet packet2;
 				packet2 << NetMsg::CLIENT_COUNT << tcp_clients.size();
-				//client_ref.send(packet);
 				processPlayerMovement(packet2, sender, tcp_clients);
 			}
 		}
@@ -168,7 +167,7 @@ void processPlayerMovement(sf::Packet& packet, Client& sender, TcpClients& tcp_c
 	std::cout << "Latency: " << sender.getLatency().count()
 		<< "us" << std::endl;
 
-	// send the packet to other clients
+	// send the packet to clients
 	for (auto& client : tcp_clients)
 	{
 		if (msg != NetMsg::MOVEMENT &&sender == client)
